@@ -2,7 +2,6 @@
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-// Dòng dưới đây là chìa khóa để sửa lỗi "could not be found"
 using HicasDemoMEP.Views;
 
 namespace HicasDemoMEP.Commands

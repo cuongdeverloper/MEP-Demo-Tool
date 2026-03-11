@@ -8,40 +8,43 @@
         <TabControl>
             <TabItem Header="1. QA/QC Pipe">
                 <StackPanel Margin="15">
-                    <Button x:Name="btnScanPipes" Content="1. Quét Toàn Bộ Ống (Model)" Height="30" Click="btnScanPipes_Click"/>
+                    <Button Content="1. Quét Toàn Bộ Ống (Model)" Height="30" Command="{Binding ScanPipesCommand}"/>
 
                     <GroupBox Header="Kết quả thống kê" Margin="0,15,0,0" Padding="10">
                         <StackPanel>
-                            <TextBlock x:Name="txtTotalPipes" Text="Tổng số Pipe: 0" Margin="0,5"/>
-                            <TextBlock x:Name="txtTotalLength" Text="Tổng chiều dài: 0 mm" Margin="0,5"/>
-                            <TextBlock x:Name="txtUnconnected" Text="Số Pipe chưa connect: 0" Foreground="Red" FontWeight="Bold" Margin="0,5"/>
+                            <TextBlock Text="{Binding TotalPipesText}" Margin="0,5"/>
+                            <TextBlock Text="{Binding TotalLengthText}" Margin="0,5"/>
+                            <TextBlock Text="{Binding UnconnectedText}" Foreground="Red" FontWeight="Bold" Margin="0,5"/>
                         </StackPanel>
                     </GroupBox>
 
-                    <Button x:Name="btnHighlight" Content="2. Highlight Ống Lỗi" Height="30" Margin="0,15,0,0" IsEnabled="False" Click="btnHighlight_Click"/>
+                    <Button Content="2. Highlight Ống Lỗi" Height="30" Margin="0,15,0,0" 
+                            IsEnabled="{Binding IsHighlightEnabled}" 
+                            Command="{Binding HighlightCommand}"/>
                 </StackPanel>
             </TabItem>
 
             <TabItem Header="2. Auto Spool Sheet">
                 <StackPanel Margin="15">
                     <TextBlock Text="Chức năng tạo bản vẽ tự động theo Bounding Box. Quét chọn ống để cắt khung 3D và ném vào Sheet." TextWrapping="Wrap" Margin="0,0,0,15"/>
-                    <Button x:Name="btnCreateSheet" Content="Chọn Ống &amp; Tạo Bản Vẽ" Height="40" Click="btnCreateSheet_Click"/>
+                    <Button Content="Chọn Ống &amp; Tạo Bản Vẽ" Height="40" Command="{Binding CreateSheetCommand}"/>
                 </StackPanel>
             </TabItem>
 
             <TabItem Header="3. Tìm Element ID">
                 <StackPanel Margin="15">
                     <TextBlock Text="Nhập Element ID (Số nguyên):" Margin="0,0,0,5"/>
-                    <TextBox x:Name="txtElementId" Height="30" VerticalContentAlignment="Center" Margin="0,0,0,10"/>
-                    <Button x:Name="btnFindId" Content="Tìm &amp; Zoom tới đối tượng" Height="35" Click="btnFindId_Click"/>
+                    <TextBox Height="30" VerticalContentAlignment="Center" Margin="0,0,0,10" 
+                             Text="{Binding ElementIdInput, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Tìm &amp; Zoom tới đối tượng" Height="35" Command="{Binding FindIdCommand}"/>
                 </StackPanel>
             </TabItem>
 
             <TabItem Header="4. Thông tin Element ">
                 <GroupBox Header="Thông tin Element được chọn" Margin="0,10,0,0" Padding="10">
                     <StackPanel>
-                        <Button x:Name="btnPickInfo" Content="Chọn Ống để xem thông tin" Height="30" Click="btnPickInfo_Click" Margin="0,0,0,10"/>
-                        <TextBlock x:Name="txtElementDetail" Text="Chưa có thông tin..." TextWrapping="Wrap" Background="#F0F0F0" Padding="5"/>
+                        <Button Content="Chọn Ống để xem thông tin" Height="30" Command="{Binding PickInfoCommand}" Margin="0,0,0,10"/>
+                        <TextBlock Text="{Binding ElementDetailText}" TextWrapping="Wrap" Background="#F0F0F0" Padding="5"/>
                     </StackPanel>
                 </GroupBox>
             </TabItem>
