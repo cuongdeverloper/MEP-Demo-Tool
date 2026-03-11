@@ -198,6 +198,18 @@
                                     <TextBlock Text="Select Pipes &amp; Create Sheets" Foreground="White"/>
                                 </StackPanel>
                             </Button>
+                            <Button Style="{StaticResource GhostButton}" Height="36" Command="{Binding AutoTagCommand}" Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="{StaticResource GlyphFont}" Text="&#xE8CB;" Margin="0,0,8,0" Foreground="{StaticResource AccentBrush}"/>
+                                    <TextBlock Text="Auto Tag (Gắn nhãn tự động)" Foreground="{StaticResource HeaderTextBrush}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource GhostButton}" Height="36" Command="{Binding AutoDimCommand}" Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="{StaticResource GlyphFont}" Text="&#xE8B3;" Margin="0,0,8,0" Foreground="{StaticResource AccentBrush}"/>
+                                    <TextBlock Text="Auto Dim (Đo kích thước tự động)" Foreground="{StaticResource HeaderTextBrush}"/>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </TabItem>
 

@@ -5,7 +5,6 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using HicasDemoMEP.Core;
 using HicasDemoMEP.Services;
-using HicasDemoMEP.Utils;
 
 namespace HicasDemoMEP.ViewModels
 {
@@ -14,9 +13,11 @@ namespace HicasDemoMEP.ViewModels
         private readonly UIDocument _uidoc;
         private readonly Document _doc;
         private readonly MEPService _service;
-        private readonly Action _hideWindow;
-        private readonly Action _showWindow;
         private List<ElementId> _errorIds = new List<ElementId>();
+
+        // --- CÁC BIẾN MỚI CHO VÒNG LẶP FORM (DIALOG LOOP) ---
+        public Action CloseWindow { get; set; }
+        public string PendingRevitTask { get; set; } = string.Empty;
 
         #region Properties (Binding dữ liệu lên UI)
 
@@ -47,23 +48,27 @@ namespace HicasDemoMEP.ViewModels
         public ICommand CreateSheetCommand { get; }
         public ICommand FindIdCommand { get; }
         public ICommand PickInfoCommand { get; }
-
+        public ICommand AutoTagCommand { get; }
+        public ICommand AutoDimCommand { get; }
         #endregion
 
-        public MainViewModel(UIDocument uidoc, Action hideWindow, Action showWindow)
+        // Hàm khởi tạo mới (Chỉ nhận uidoc và service)
+        public MainViewModel(UIDocument uidoc, MEPService service)
         {
             _uidoc = uidoc;
             _doc = uidoc.Document;
-            _service = new MEPService(_doc);
-            _hideWindow = hideWindow;
-            _showWindow = showWindow;
+            _service = service;
 
             // Khởi tạo Commands
             ScanPipesCommand = new RelayCommand(ExecuteScanPipes);
             HighlightCommand = new RelayCommand(ExecuteHighlight);
-            CreateSheetCommand = new RelayCommand(ExecuteCreateSheet);
             FindIdCommand = new RelayCommand(ExecuteFindId);
+
+            // Các lệnh cần đóng form để thao tác chuột trên Revit
+            CreateSheetCommand = new RelayCommand(ExecuteCreateSheet);
             PickInfoCommand = new RelayCommand(ExecutePickInfo);
+            AutoTagCommand = new RelayCommand(ExecuteAutoTag);
+            AutoDimCommand = new RelayCommand(ExecuteAutoDim);
         }
 
         private void ExecuteScanPipes(object obj)
@@ -85,22 +90,6 @@ namespace HicasDemoMEP.ViewModels
             }
         }
 
-        private void ExecuteCreateSheet(object obj)
-        {
-            _hideWindow(); // Ẩn form để thao tác trong Revit
-            try
-            {
-                var refs = _uidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element, new MEPSelectionFilter(), "Quét chọn cụm ống");
-                if (refs.Count > 0)
-                {
-                    _service.CreateSpoolSheet(refs);
-                    Autodesk.Revit.UI.TaskDialog.Show("Thành công", "Đã tạo bản vẽ!");
-                }
-            }
-            catch { /* Người dùng hủy lệnh ESC */ }
-            finally { _showWindow(); } // Hiện lại form
-        }
-
         private void ExecuteFindId(object obj)
         {
             var res = _service.FindElement(ElementIdInput?.Trim());
@@ -115,16 +104,28 @@ namespace HicasDemoMEP.ViewModels
             }
         }
 
+
+        private void ExecuteCreateSheet(object obj)
+        {
+            PendingRevitTask = "CreateSheet";
+            CloseWindow?.Invoke();
+        }
+
         private void ExecutePickInfo(object obj)
         {
-            _hideWindow();
-            try
-            {
-                var r = _uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, new MEPSelectionFilter(), "Chọn một ống");
-                ElementDetailText = _service.GetElementInfo(_doc.GetElement(r));
-            }
-            catch { }
-            finally { _showWindow(); }
+            PendingRevitTask = "PickInfo";
+            CloseWindow?.Invoke();
+        }
+
+        private void ExecuteAutoTag(object obj)
+        {
+            PendingRevitTask = "AutoTag";
+            CloseWindow?.Invoke();
+        }
+        private void ExecuteAutoDim(object obj)
+        {
+            PendingRevitTask = "AutoDim";
+            CloseWindow?.Invoke();
         }
     }
 }
