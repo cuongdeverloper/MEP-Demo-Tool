@@ -3,6 +3,7 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using HicasDemoMEP.Views;
+using HicasDemoMEP.ViewModels; // Đảm bảo đã using namespace chứa MainViewModel
 
 namespace HicasDemoMEP.Commands
 {
@@ -15,7 +16,15 @@ namespace HicasDemoMEP.Commands
 
             try
             {
-                Window1 mainWindow = new Window1(uidoc);
+                Window1 mainWindow = null;
+
+                Action hideAction = () => mainWindow?.Hide();
+                Action showAction = () => mainWindow?.Show();
+
+                MainViewModel vm = new MainViewModel(uidoc, hideAction, showAction);
+
+                mainWindow = new Window1(vm);
+
                 mainWindow.ShowDialog();
 
                 return Result.Succeeded;

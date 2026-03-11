@@ -1,19 +1,29 @@
 ﻿using System.Windows;
-using Autodesk.Revit.UI;
-using HicasDemoMEP.ViewModels;
 
 namespace HicasDemoMEP.Views
 {
     public partial class Window1 : Window
     {
-        public Window1(UIDocument uidoc)
+        public Window1()
+        {
+            InitializeComponent();
+        }
+
+        public Window1(object viewModel)
         {
             InitializeComponent();
 
-            // Set DataContext = ViewModel, đồng thời truyền hàm ẩn/hiện cửa sổ
-            this.DataContext = new MainViewModel(uidoc,
-                hideWindow: () => this.Hide(),
-                showWindow: () => this.ShowDialog());
+            this.DataContext = viewModel;
+        }
+
+        private void OnHelpClicked(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Help documentation coming soon!", "Hicas MEP Help", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void OnCloseClicked(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
